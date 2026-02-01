@@ -23,7 +23,8 @@ Real-time chat app for cavemen! Built by smart gorilla with FastAPI + Svelte 5 +
 - 🍌 Pick caveman avatar to send messages
 - 🍌 Tabs for switching between caves
 - 🍌 Clean card-style messages with perfect spacing
-- 🦍 **ALPHA GORILLA AI** - Chat with gemma3:4b (only brain that speaks monkey!)
+- 🦍 **Special AI Cave** - Dedicated room for chatting with gemma3:4b ALPHA GORILLA!
+- 🤖 **Smart AI Detection** - Any room with "AI Cave" or "🤖" in name becomes AI-enabled!
 
 ## Tech Stack
 
@@ -77,9 +78,10 @@ docker compose up --build
 
 **THAT'S IT!** Visit http://localhost:5173 🍌
 
-1. Pick 🤖 Ollama avatar
-2. Choose **gemma3:4b** model
-3. Type "OOK OOK!" and watch ALPHA GORILLA respond! 💪
+1. Go to **🤖 AI Cave** room (created automatically!)
+2. Pick any caveman avatar (🦍 Grok, 🐒 Ooga, etc.)
+3. Choose **gemma3:4b** model from dropdown
+4. Type "OOK OOK!" and watch ALPHA GORILLA respond! 💪
 
 ## Useful Commands 🦍
 
@@ -126,7 +128,7 @@ Docker automatically connects to Ollama on your host machine using `host.docker.
 
 ### Messages
 - `GET /api/messages/room/{room_id}?page=1&page_size=10` - Get messages (paginated)
-- `POST /api/messages` - Create message (optionally include `model` field for Ollama)
+- `POST /api/messages` - Create message (include `model` field in AI rooms for AI response)
 
 ### Ollama
 - `GET /api/ollama/models` - List available Ollama models
@@ -134,15 +136,26 @@ Docker automatically connects to Ollama on your host machine using `host.docker.
 ### WebSocket
 - `WS /api/ws/room/{room_id}` - Real-time messages for cave
 
-## Cavemen
+## How AI Rooms Work 🤖
 
-Pick your avatar:
+### Default Rooms Created:
+1. **🤖 AI Cave (Talk to Qwen)** - Chat with ALPHA GORILLA AI!
+2. **Cave 🍌** - Regular monkey chat
+
+### Making AI Rooms:
+Create any room with "AI Cave" or "🤖" in the name, and it becomes AI-enabled! 
+- ModelSelector appears automatically
+- Pick gemma3:4b and start talking to ALPHA GORILLA! 💪
+
+### Cavemen Avatars:
+Pick your monkey:
 - 🦍 Grok
 - 🐒 Ooga
 - 🦧 Booga
 - 🙈 Ugga
 - 🙉 Mugga
-- 🤖 Ollama (AI chat - select a model to chat with AI)
+
+**All monkeys can talk in AI Cave!** Just pick a model and GRUNT! 🦍
 
 ## UI Features
 

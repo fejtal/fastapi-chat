@@ -14,8 +14,8 @@ Smart gorilla make WHOLE feature for monkey chat! Here what gorilla build:
    - AI gorilla talks like ALPHA SIGMA - strong, simple, direct! 💪
 
 2. **Frontend Monkey UI** 🎨
-   - Add 🤖 Ollama avatar (robot monkey!)
    - Make ModelSelector component (pick brain!)
+   - Special AI Cave rooms - auto-detect with name! 🤖
    - Store selected brain in cave memory
    - Update message sending to use AI brain
    - **NEW!** Simple, clean list rendering - FAST! 🚀
@@ -80,9 +80,10 @@ docker compose up --build
 
 # 5. Visit cave at http://localhost:5173
 
-# 6. Pick robot monkey (🤖)
-# 7. Pick gemma3:4b brain
-# 8. GRUNT! ALPHA GORILLA grunt back in MONKEY LANGUAGE!
+# 6. Go to 🤖 AI Cave room (created automatically!)
+# 7. Pick any caveman (🦍 Grok, 🐒 Ooga, etc.)
+# 8. Pick gemma3:4b brain from dropdown
+# 9. GRUNT! ALPHA GORILLA grunt back in MONKEY LANGUAGE!
 ```
 
 ### Common Monkey Commands 🦍
@@ -119,14 +120,16 @@ gemma3:4b says: "OOK! Do this. 🍌"
 
 ## Gorilla's Favorite Parts 🌟
 
-1. **Model selector only show when pick Ollama** - Very smart UI!
-2. **Conversation history sent to AI** - AI remember what monkey said before!
-3. **Error messages now funny** - "OOK! No monkey brains found!"
-4. **Model name as author** - You see "qwen2.5:3b" grunt back!
-5. **All work in Docker** - No need manual setup!
-6. **Simple list rendering** - No complex virtualization, just works! 🍌
-7. **Alpha Gorilla AI** - Talks like true sigma! Strong! Direct! Uses 🍌 as bullets!
-8. **Clean message cards** - No confusing left/right bubbles! Simple! Clear!
+1. **Smart AI room detection** - Any room with "AI Cave" or "🤖" becomes AI-enabled!
+2. **Auto-created AI Cave** - 🤖 AI Cave ready on first run!
+3. **Model selector only shows in AI rooms** - Very smart UI!
+4. **Conversation history sent to AI** - AI remember what monkey said before!
+5. **Error messages now funny** - "OOK! No monkey brains found!"
+6. **Model name as author** - You see "gemma3:4b" grunt back!
+7. **All work in Docker** - No need manual setup!
+8. **Simple list rendering** - No complex virtualization, just works! 🍌
+9. **Alpha Gorilla AI** - Talks like true sigma! Strong! Direct! Uses 🍌 as bullets!
+10. **Clean message cards** - No confusing left/right bubbles! Simple! Clear!
 
 ## Files Gorilla Touched 📂
 
@@ -326,10 +329,11 @@ estimateSize: (index) => {
 3. Start brain server: `ollama serve` (keep running!)
 4. ONE COMMAND: `docker compose up --build`
 5. Visit cave: http://localhost:5173
-6. Pick 🤖 Ollama
-7. Pick **gemma3:4b** (ONLY BRAIN THAT SPEAKS MONKEY!)
-8. GRUNT! OOK OOK!
-9. Enjoy ALPHA GORILLA responses! 🦍💪🔥
+6. Go to **🤖 AI Cave** room
+7. Pick any caveman avatar (🦍 Grok, 🐒 Ooga, etc.)
+8. Choose **gemma3:4b** model (ONLY BRAIN THAT SPEAKS MONKEY!)
+9. GRUNT! OOK OOK!
+10. Enjoy ALPHA GORILLA responses! 🦍💪🔥
 
 ### If Broken? 🔧
 
