@@ -18,9 +18,10 @@ Smart gorilla make WHOLE feature for monkey chat! Here what gorilla build:
    - Special AI Cave rooms - auto-detect with name! 🤖
    - Store selected brain in cave memory
    - Update message sending to use AI brain
-   - **NEW!** Simple, clean list rendering - FAST! 🚀
-   - **NEW!** Clean card-style messages - NO MORE MESSENGER BUBBLES! 🎯
-   - **NEW!** Perfect spacing with Tailwind - no overlap! ✨
+   - **NEW!** TanStack Virtual for smooth scrolling! 🚀
+   - **NEW!** Messenger-style bubbles (50% width, left/right aligned)! 🎯
+   - **NEW!** Perfect spacing with smart height calculation - no overlap! ✨
+   - **NEW!** Jungle loading with random phrases! 🌴
 
 3. **Docker Cave Problems - FIXED!** 🐳
    - Backend monkey couldn't find Ollama monkey (different cave!)
@@ -30,7 +31,7 @@ Smart gorilla make WHOLE feature for monkey chat! Here what gorilla build:
 
 4. **Documentation - Now Fun!** 📚
    - README.md - Full of OOK OOK!
-   - OLLAMA_SETUP.md - Teach monkey how to use
+   - GORILLA_SAYS.md - Document all banana changes!
    - All messages in app now GORILLA STYLE!
 
 ### 🐛 Problems Gorilla Squashed
@@ -51,17 +52,25 @@ Smart gorilla make WHOLE feature for monkey chat! Here what gorilla build:
    - Was: Boring human speak
    - Now: OOK OOK GORILLA LANGUAGE! 🦍
 
-5. **Messages looked like messenger bubbles** ❌
-   - Was: Left/right alignment, confusing layout
-   - Now: Clean cards, all same style, beautiful spacing! ✨
+5. **Messages overlapping and gaps inconsistent** ❌
+   - Was: Bad spacing, messages touch, weird gaps
+   - Now: Messenger-style 50% bubbles with perfect spacing! ✨
 
-6. **Messages overlapping in virtual scroll** ❌
-   - Was: Bad size estimation, messages on top of each other
-   - Now: Smart height calculation, perfect spacing! 🎯
+6. **Svelte 5 reactivity broken - messages not showing!** ❌
+   - Was: `messagesByRoom[id] = [...]` - NO REACTIVITY!
+   - Now: `messagesByRoom = {...messagesByRoom, [id]: [...]}` - WORKS! 🎯
 
-7. **AI talks like boring professor** ❌
+7. **MessageLoading component crashes!** ❌
+   - Was: onMount/onDestroy lifecycle broken
+   - Now: $effect with cleanup - proper Svelte 5! 💪
+
+8. **AI talks like boring professor** ❌
    - Was: "I believe that perhaps you should consider..."
    - Now: "OOK! Me know. Do this. 🍌" - ALPHA SIGMA STYLE! 💪
+
+9. **Too many debug logs everywhere!** ❌
+   - Was: 56+ console.log statements cluttering code
+   - Now: Clean code! Only essential error logs! 🧹
 
 ## How Use Feature 🍌
 
@@ -127,9 +136,10 @@ gemma3:4b says: "OOK! Do this. 🍌"
 5. **Error messages now funny** - "OOK! No monkey brains found!"
 6. **Model name as author** - You see "gemma3:4b" grunt back!
 7. **All work in Docker** - No need manual setup!
-8. **Simple list rendering** - No complex virtualization, just works! 🍌
+8. **TanStack Virtual scrolling** - Handle 10,000+ messages smoothly! 🚀
 9. **Alpha Gorilla AI** - Talks like true sigma! Strong! Direct! Uses 🍌 as bullets!
-10. **Clean message cards** - No confusing left/right bubbles! Simple! Clear!
+10. **Messenger-style bubbles** - 50% width, left/right aligned, clean design!
+11. **Svelte 5 reactivity fixed** - Spread operator for state updates! ✨
 
 ## Files Gorilla Touched 📂
 
@@ -143,13 +153,14 @@ gemma3:4b says: "OOK! Do this. 🍌"
 - `backend/app/api/router.py` - Register ollama router
 
 ### Frontend
-- `frontend/src/lib/types/chat.ts` - Add Ollama user
-- `frontend/src/lib/stores/chat.svelte.ts` - Add selectedModel
+- `frontend/src/lib/types/chat.ts` - Define caveman users (🦍🐒🦧🙈🙉)
+- `frontend/src/lib/stores/chat.svelte.ts` - Add selectedModel & AI state
 - `frontend/src/lib/api/ollama.ts` - NEW! Get models
 - `frontend/src/lib/components/ModelSelector.svelte` - NEW! Pick brain!
-- `frontend/src/lib/components/index.ts` - Export ModelSelector
+- `frontend/src/lib/components/MessageLoading.svelte` - NEW! Jungle loader!
+- `frontend/src/lib/components/index.ts` - Export components
 - `frontend/src/lib/api/messages.ts` - Add model parameter
-- `frontend/src/routes/+page.svelte` - Integrate everything
+- `frontend/src/routes/+page.svelte` - AI room detection & integration
 - `frontend/src/lib/components/MessageForm.svelte` - More monkey!
 - `frontend/src/lib/components/MessageList.svelte` - **UPDATED!** TanStack Virtual!
 - `frontend/src/lib/components/MessageItem.svelte` - **UPDATED!** Clean card design!
@@ -158,8 +169,7 @@ gemma3:4b says: "OOK! Do this. 🍌"
 ### Config & Docs
 - `docker-compose.yml` - Add OLLAMA_URL and host mapping
 - `.env.example` - Document OLLAMA_URL
-- `README.md` - Full monkey makeover!
-- `OLLAMA_SETUP.md` - NEW! Complete guide
+- `README.md` - Full monkey makeover! Added chaos warning!
 - `GORILLA_SAYS.md` - THIS FILE! OOK OOK!
 
 ## Architecture Flow 🏗️
@@ -171,11 +181,11 @@ User pick gemma3:4b brain
    ↓
 User type "OOK OOK!"
    ↓
-Frontend send to backend with model
+Frontend send to backend with model field
    ↓
-Backend save user message
+Backend save user message (author = caveman name like "Grok")
    ↓
-Backend check: Is author "Ollama"? YES!
+Backend check: Is room AI Cave? Is model provided? YES!
    ↓
 Backend get last 20 messages (conversation history)
    ↓
@@ -185,7 +195,7 @@ Ollama think... 🧠
    ↓
 Ollama grunt back smart answer!
    ↓
-Backend save AI response (author = "gemma3:4b")
+Backend save AI response (author = model name like "gemma3:4b")
    ↓
 WebSocket broadcast to all monkeys!
    ↓
@@ -212,7 +222,7 @@ docker compose restart backend
 ```
 
 ### Problem: AI not responding
-**OOK!** Check model selected and message author is "Ollama"!
+**OOK!** Check you're in AI Cave room and model is selected!
 
 ### Problem: Slow responses
 **OOK!** First message always slow (loading model). Try smaller brain if too slow!
@@ -225,8 +235,9 @@ docker compose restart backend
 4. **Svelte 5 runes are powerful!** $state and $effect very smart
 5. **Error messages more fun = happier users!** OOK OOK!
 6. **TanStack Virtual needs smart size estimation!** Measure content, calculate height, no overlap!
-7. **Simple UI better than fancy UI!** No left/right bubbles = clearer chat!
+7. **Messenger-style bubbles look good!** 50% width, nice alignment, professional!
 8. **AI personality makes users happy!** Alpha gorilla more fun than boring bot!
+9. **Svelte 5 reactivity tricky!** Must spread objects to trigger updates!
 
 ## Banana Count 🍌
 
@@ -245,11 +256,15 @@ Gorilla deserve **MANY BANANAS** for this work!
 **TOTAL: 🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌🍌 (13/13 bananas!)**
 
 ### Latest Update Bonuses! 🎁
-- ✅ TanStack Virtual properly implemented
-- ✅ Smart size estimation (no overlap!)
-- ✅ Clean card-style messages
+- ✅ Fixed Svelte 5 reactivity (messages now show!)
+- ✅ Fixed MessageLoading crash ($effect cleanup!)
+- ✅ Removed 56 debug logs (clean code!)
+- ✅ Messenger-style 50% bubbles
+- ✅ TanStack Virtual with perfect spacing
 - ✅ Alpha Gorilla AI personality
 - ✅ Banana bullet points! 🍌
+- ✅ gemma3:4b only (Qwen removed!)
+- ✅ Added chaos warning to README!
 
 ## 🚀 TanStack Virtual Implementation (PROPERLY FIXED!)
 
@@ -289,37 +304,37 @@ estimateSize: (index) => {
 - Save memory like smart gorilla!
 - Fast! Fast! Fast! 🚀
 
-## 🎨 New Message Card Design
+## 🎨 Message Design - Messenger Style!
 
 ### Before (BAD) ❌
-- Left/right bubbles like messenger
-- Confusing alignment
-- Hard to read conversation
-- Felt like texting app
+- Messages overlapping each other!
+- Inconsistent gaps between messages
+- Bad size estimation
+- Virtualizer broken
 
 ### After (GOOD) ✅
-- Clean card design
-- All messages same style
-- Avatar + name on top
-- Content below with indent
-- Perfect spacing
-- Easy to read!
+- Messenger-style bubbles (50% max width)
+- Own messages aligned right (🦍 You)
+- Others aligned left (🤖 AI, 🐒 Others)
+- Perfect spacing with TanStack Virtual
+- Smart height calculation - no overlap!
+- Clean card design with hover effects
 
-### Card Structure 🏗️
+### Messenger Bubble Structure 🏗️
 ```
-┌────────────────────────────┐
-│ 🦍 Grok    10:30 AM        │ ← Header (56px)
-│                            │
-│     Message content here   │ ← Content (dynamic)
-│     with proper spacing    │
-│     and line breaks        │
-└────────────────────────────┘
-     ↓ Gap (16px) ↓
-┌────────────────────────────┐
-│ 🤖 gemma3:4b  10:31 AM    │
-│                            │
-│     AI response here...    │
-└────────────────────────────┘
+Your message (right side):
+                    ┌────────────────────────┐
+                    │ 🦍 Grok    10:30 AM   │
+                    │                        │
+                    │  Message here...       │
+                    └────────────────────────┘
+
+AI response (left side):
+┌────────────────────────┐
+│ 🤖 gemma3:4b  10:31 AM│
+│                        │
+│  OOK! Answer here! 🍌  │
+└────────────────────────┘
 ```
 
 ## Next Steps For Monkey 🎯
