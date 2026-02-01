@@ -13,9 +13,7 @@
 		if (!content.trim() || submitting) return;
 
 		const messageContent = content;
-		console.log('[MessageForm] Clearing input, content was:', messageContent);
 		content = ''; // Clear immediately!
-		console.log('[MessageForm] Input cleared, content now:', content);
 		submitting = true;
 		try {
 			await onSubmit(messageContent, chatStore.selectedUser.name);

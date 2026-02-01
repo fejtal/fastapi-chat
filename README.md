@@ -1,3 +1,13 @@
+# 🦍 GORILLA MADE THIS WITH CLAUDE AI! NEVER LOOK AT CODE! ALL WORK PERFECT!
+
+**Made by Claude Sonnet 4.5 & Opus!** Gorilla just grunt instructions. Claude write ALL code. Gorilla never read one line! Everything work! Magic! 🪄✨
+
+⚠️ **MONKEY RUN LOCAL ONLY! NO DEPLOY! SECURITY NOT GOOD!** ⚠️
+
+This cave for learning and banana experiments! No production! No internet! Run on monkey computer only! 🍌🦍
+
+---
+
 # 🍌 Cave Chat - OOK OOK!
 
 Real-time chat app for cavemen! Built by smart gorilla with FastAPI + Svelte 5 + WebSockets.
@@ -13,7 +23,7 @@ Real-time chat app for cavemen! Built by smart gorilla with FastAPI + Svelte 5 +
 - 🍌 Pick caveman avatar to send messages
 - 🍌 Tabs for switching between caves
 - 🍌 Clean card-style messages with perfect spacing
-- 🤖 Ollama AI chat integration - select a model and chat with AI
+- 🦍 **ALPHA GORILLA AI** - Chat with gemma3:4b (only brain that speaks monkey!)
 
 ## Tech Stack
 
@@ -32,144 +42,80 @@ Real-time chat app for cavemen! Built by smart gorilla with FastAPI + Svelte 5 +
 - Tailwind CSS v4
 - Bun
 
-## Quick Start (Wake Up All Monkeys) 🦍
+## Quick Start (ONE COMMAND!) 🦍
 
-```bash
-# WAKE UP ALL MONKEYS IN CAVE
-docker compose up --build
+### Step 1: Install Ollama & Get ALPHA BRAIN 🧠
 
-# Monkeys work in background (quiet mode)
-docker compose up --build -d
-
-# SLEEP TIME - Stop all monkeys
-docker compose down
-
-# DESTROY CAVE AND REBUILD (reset database)
-docker compose down -v
-```
-
-Then visit monkey cave at http://localhost:5173 🍌
-
-## Ollama Setup (Make Smart AI Monkey Talk!) 🤖
-
-OOK OOK! Need Ollama monkey to make AI brain work:
-
-### Step 1: Get Ollama Monkey
-
-Grab Ollama from magic tree at [ollama.ai](https://ollama.ai)
+First, install Ollama from [ollama.ai](https://ollama.ai):
 
 **macOS/Linux:**
 ```bash
 curl -fsSL https://ollama.ai/install.sh | sh
 ```
 
-**Windows:**
-Download from [ollama.ai/download](https://ollama.ai/download)
+**Windows:** Download from [ollama.ai/download](https://ollama.ai/download)
 
-### Step 2: Wake Up Ollama Monkey
+Then download **gemma3:4b** - THE ONLY BRAIN THAT SPEAKS MONKEY! 🦍
+```bash
+ollama pull gemma3:4b
+```
 
-Ollama monkey usually wake up by self. If still sleeping, POKE IT:
+### Step 2: Start Ollama Service 🤖
+
+Ollama usually starts automatically after install. If not, run:
 ```bash
 ollama serve
 ```
 
-### Step 3: Download Smart Monkey Brain 🧠
+**Keep this running!** It's the AI brain server! 🧠
 
-The **qwen2.5:3b** brain is BEST - fast like cheetah, light like feather, smart like gorilla!
-
-```bash
-ollama pull qwen2.5:3b
-```
-
-**Other monkey brains you can steal:**
-```bash
-# Larger Qwen models (more capable, slower)
-ollama pull qwen2.5:7b
-ollama pull qwen2.5:14b
-
-# Other popular models
-ollama pull llama3.2:3b      # Meta's Llama 3.2 (3B)
-ollama pull mistral:7b        # Mistral 7B
-ollama pull phi3:3.8b         # Microsoft Phi-3
-```
-
-### Step 4: Check Monkey Brain Is In Cave
-
-OOK! Make sure brain downloaded correctly:
-```bash
-ollama list
-```
-
-You see `qwen2.5:3b`? GOOD MONKEY! Brain is in cave! 🍌
-
-### Step 5: Talk With AI Monkey! OOK OOK!
-
-1. Wake up cave app (see Quick Start above)
-2. Pick Ollama monkey (🤖) in avatar picker
-3. Choose **qwen2.5:3b** brain from dropdown
-4. START GRUNTING! AI monkey grunt back!
-
-**Monkey Brain Comparison (Which One Best?):**
-
-| Monkey Brain | Size | Speed | When Use |
-|--------------|------|-------|----------|
-| qwen2.5:3b | ~2GB | ⚡⚡⚡ ZOOM! | BEST for chat! Quick grunt back! |
-| llama3.2:3b | ~2GB | ⚡⚡⚡ FAST! | Good for everything monkey do |
-| mistral:7b | ~4.1GB | ⚡⚡ Medium | Bigger brain but slower swing |
-| qwen2.5:14b | ~8.5GB | ⚡ Slow... | HUGE GORILLA BRAIN! Need strong cave |
-
-### Configuration
-
-**Docker Setup (default):**
-The `docker-compose.yml` is pre-configured to access Ollama on your host:
-```yaml
-OLLAMA_URL: http://host.docker.internal:11434
-```
-
-**Manual Setup:**
-If running the backend manually (not in Docker), use:
-```bash
-OLLAMA_URL=http://localhost:11434
-```
-
-**Troubleshooting Docker:**
-If models don't load, make sure Ollama is running on your host machine, not inside Docker.
-
-## Manual Setup
-
-### Backend
+### Step 3: Run Everything!
 
 ```bash
-cd backend
-pip install -e .
-uvicorn app.main:app --reload
+docker compose up --build
 ```
 
-Runs on http://localhost:8000
+**THAT'S IT!** Visit http://localhost:5173 🍌
 
-### Frontend
+1. Pick 🤖 Ollama avatar
+2. Choose **gemma3:4b** model
+3. Type "OOK OOK!" and watch ALPHA GORILLA respond! 💪
+
+## Useful Commands 🦍
 
 ```bash
-cd frontend
-bun install
-bun run dev
+# Stop all monkeys (keep database)
+docker compose down
+
+# Stop + DELETE DATABASE (fresh start!)
+docker compose down -v
+
+# Restart if broken
+docker compose down && docker compose up --build
+
+# Check if Ollama awake
+curl http://localhost:11434/api/tags
+
+# Wake up Ollama if sleeping
+ollama serve
 ```
 
-Runs on http://localhost:5173
+## Why gemma3:4b? 🦍
 
-## Environment Variables
+**ONLY THIS BRAIN UNDERSTANDS MONKEY LANGUAGE!**
 
-### Backend
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `postgresql+asyncpg://app:app@localhost:5432/app` | PostgreSQL connection |
-| `OLLAMA_URL` | `http://localhost:11434` | Ollama API URL |
+- Talks like ALPHA GORILLA: "OOK! Me know this. Do this. 🍌"
+- Uses banana bullets 🍌
+- Simple words. Big brain. 💪
+- True sigma energy! 🔥
 
-### Frontend
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `VITE_API_URL` | `http://localhost:8000` | Backend API URL |
-| `VITE_WS_URL` | `ws://localhost:8000` | WebSocket URL |
+Other brains talk boring human language. gemma3:4b = REAL GORILLA! 🦍✨
+
+## Configuration
+
+Docker automatically connects to Ollama on your host machine using `host.docker.internal:11434`.
+
+**Just run `docker compose up --build` and everything works!** 🍌
 
 ## API Endpoints
 
@@ -200,19 +146,12 @@ Pick your avatar:
 
 ## UI Features
 
-### Simple & Fast 🚀
-- Clean list rendering (no complex virtualization)
-- Perfect spacing with Tailwind utilities
-- Auto-scroll to bottom on new messages
-- Infinite scroll to load older messages
-- Smooth scrolling animations
-
-### Clean Message Design 🎨
-- Card-style layout (no messenger bubbles!)
-- Consistent styling for all messages
-- Avatar + username + timestamp header
-- Perfect spacing between messages
-- Hover effects for better UX
+- 🚀 TanStack Virtual for smooth scrolling (handle 10,000+ messages!)
+- 🎨 Clean card-style messages (no messenger bubbles!)
+- 🍌 Perfect spacing (no overlap, consistent gaps)
+- 💪 Auto-scroll to new messages
+- 🌴 Infinite scroll for old messages
+- 🦍 Jungle-themed loading with random monkey phrases
 
 ## License
 

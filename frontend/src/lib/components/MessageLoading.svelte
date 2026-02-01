@@ -16,7 +16,6 @@
 
 	// Use $effect with cleanup instead of onMount/onDestroy
 	$effect(() => {
-		console.log('[MessageLoading] Starting interval');
 		const intervalId = window.setInterval(() => {
 			const randomIndex = Math.floor(Math.random() * jungleTexts.length);
 			currentText = jungleTexts[randomIndex];
@@ -24,7 +23,6 @@
 
 		// Cleanup function - automatically called when component unmounts
 		return () => {
-			console.log('[MessageLoading] Cleaning up interval');
 			clearInterval(intervalId);
 		};
 	});

@@ -23,25 +23,9 @@
   // Reversed messages for display (oldest at top, newest at bottom)
   const displayMessages = $derived([...messages].reverse());
 
-  // Debug logging for message changes
-  $effect(() => {
-    console.log('[MessageList] ===== STATE UPDATE =====');
-    console.log('[MessageList] Messages count:', messages.length);
-    console.log('[MessageList] Display messages count:', displayMessages.length);
-    console.log('[MessageList] AI generating:', chatStore.aiGenerating);
-    console.log('[MessageList] Virtualizer exists:', virtualizer !== null);
-    console.log('[MessageList] ScrollContainer exists:', scrollContainer !== undefined);
-    if (displayMessages.length > 0) {
-      console.log('[MessageList] First message:', displayMessages[0]);
-      console.log('[MessageList] Last message:', displayMessages[displayMessages.length - 1]);
-    }
-  });
-
   // TanStack Virtual - FIXED: Proper spacing calculation! 🦍
   const virtualizer = $derived.by(() => {
     if (!scrollContainer) return null;
-    
-    console.log('[MessageList] Creating virtualizer with count:', displayMessages.length);
     
     return createVirtualizer<HTMLDivElement, HTMLDivElement>({
           count: displayMessages.length,

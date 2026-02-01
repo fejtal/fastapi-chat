@@ -58,18 +58,12 @@ export const chatStore = {
 
 	// Setters
 	setActiveRoom(roomId: number) {
-		console.log('[STORE] setActiveRoom called with:', roomId);
-		console.log('[STORE] activeRoomId BEFORE:', activeRoomId);
 		activeRoomId = roomId;
-		console.log('[STORE] activeRoomId AFTER:', activeRoomId);
 	},
 
 	setRooms(newRooms: Room[]) {
-		console.log('[DEBUG] setRooms called with:', newRooms.length, 'rooms');
-		console.log('[DEBUG] loadingRooms BEFORE:', loadingRooms);
 		rooms = newRooms;
 		loadingRooms = false;
-		console.log('[DEBUG] loadingRooms AFTER:', loadingRooms);
 	},
 
 	setLoadingRooms(loading: boolean) {
@@ -98,16 +92,12 @@ export const chatStore = {
 	},
 
 	addMessage(roomId: number, message: Message) {
-		console.log('[STORE] addMessage called - roomId:', roomId, 'message:', message);
 		const existing = messagesByRoom[roomId] ?? [];
-		console.log('[STORE] Existing messages count:', existing.length);
 		// IMPORTANT: Reassign the entire object to trigger Svelte 5 reactivity!
 		messagesByRoom = {
 			...messagesByRoom,
 			[roomId]: [message, ...existing]
 		};
-		console.log('[STORE] New messages count:', messagesByRoom[roomId].length);
-		console.log('[STORE] messagesByRoom after add:', messagesByRoom);
 	},
 
 	setLoadingMessages(loading: boolean) {
@@ -123,8 +113,6 @@ export const chatStore = {
 	},
 
 	setAiGenerating(generating: boolean) {
-		console.log('[STORE] setAiGenerating called:', generating);
 		aiGenerating = generating;
-		console.log('[STORE] aiGenerating now:', aiGenerating);
 	}
 };

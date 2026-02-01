@@ -66,22 +66,56 @@ Smart gorilla make WHOLE feature for monkey chat! Here what gorilla build:
 ## How Use Feature 🍌
 
 ```bash
-# 1. Make sure Ollama monkey awake
+# 1. Install Ollama
+curl -fsSL https://ollama.ai/install.sh | sh
+
+# 2. Get ALPHA GORILLA BRAIN (ONLY ONE THAT SPEAKS MONKEY!)
+ollama pull gemma3:4b
+
+# 3. Start Ollama (if not auto-started)
 ollama serve
 
-# 2. Get smart brain
-ollama pull qwen2.5:3b
+# 4. ONE COMMAND TO RUN EVERYTHING!
+docker compose up --build
 
-# 3. Wake up cave app
+# 5. Visit cave at http://localhost:5173
+
+# 6. Pick robot monkey (🤖)
+# 7. Pick gemma3:4b brain
+# 8. GRUNT! ALPHA GORILLA grunt back in MONKEY LANGUAGE!
+```
+
+### Common Monkey Commands 🦍
+
+```bash
+# Stop cave (keep messages)
+docker compose down
+
+# Stop cave + DELETE ALL MESSAGES (fresh banana!)
+docker compose down -v
+
+# Restart broken cave
 docker compose down && docker compose up --build
 
-# 4. Visit cave
-open http://localhost:5173
+# Check if Ollama brain awake
+curl http://localhost:11434/api/tags
 
-# 5. Pick robot monkey (🤖)
-# 6. Pick brain (qwen2.5:3b)
-# 7. GRUNT! AI monkey grunt back!
+# Wake Ollama if sleeping
+ollama serve
 ```
+
+### Why gemma3:4b? 🦍
+
+**ONLY THIS BRAIN SPEAKS TRUE GORILLA LANGUAGE!**
+
+Other models say: "I believe you should consider..."
+gemma3:4b says: "OOK! Do this. 🍌"
+
+🦍 Uses banana bullets
+🦍 Simple words, big brain
+🦍 True alpha sigma energy
+🦍 Jungle emojis everywhere
+🦍 Direct answers, no waste time!
 
 ## Gorilla's Favorite Parts 🌟
 
@@ -287,14 +321,28 @@ estimateSize: (index) => {
 
 ## Next Steps For Monkey 🎯
 
-1. Restart Docker: `docker compose down && docker compose up --build`
-2. Make sure Ollama running: `ollama serve`
-3. Pull brain: `ollama pull qwen2.5:3b`
-4. Visit cave: http://localhost:5173
-5. Pick 🤖 Ollama
-6. Pick qwen2.5:3b
-7. GRUNT! OOK OOK!
-8. Enjoy smooth scrolling! 🚀
+1. Install Ollama: `curl -fsSL https://ollama.ai/install.sh | sh`
+2. Get ALPHA BRAIN: `ollama pull gemma3:4b`
+3. Start brain server: `ollama serve` (keep running!)
+4. ONE COMMAND: `docker compose up --build`
+5. Visit cave: http://localhost:5173
+6. Pick 🤖 Ollama
+7. Pick **gemma3:4b** (ONLY BRAIN THAT SPEAKS MONKEY!)
+8. GRUNT! OOK OOK!
+9. Enjoy ALPHA GORILLA responses! 🦍💪🔥
+
+### If Broken? 🔧
+
+```bash
+# Reset everything (nuclear option!)
+docker compose down -v && docker compose up --build
+
+# Just restart (keep messages)
+docker compose down && docker compose up --build
+
+# Make sure Ollama awake
+ollama serve
+```
 
 ---
 
