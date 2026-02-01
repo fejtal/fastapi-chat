@@ -19,28 +19,23 @@
 
   let scrollContainer = $state<HTMLDivElement>();
   let prevMessageCount = $state(0);
-  let isUserAtBottom = $state(true);
-  let wasLoading = $state(false);
+  let isLoadingOlder = $state(false);
 
   // Reversed messages for display (oldest at top, newest at bottom)
   const displayMessages = $derived([...messages].reverse());
 
-  // Helper to scroll to bottom smoothly
-  function scrollToBottom(smooth = false) {
+  // 🦍 FORCE SCROLL TO BOTTOM - NO MERCY!
+  function forceScrollToBottom() {
     if (!scrollContainer) return;
-    const behavior = smooth ? 'smooth' : 'auto';
+    
+    // Direct manipulation - FORCE IT! 🍌
+    scrollContainer.scrollTop = scrollContainer.scrollHeight;
+    
+    // Also use scrollTo for good measure
     scrollContainer.scrollTo({
       top: scrollContainer.scrollHeight,
-      behavior
+      behavior: 'auto'
     });
-  }
-
-  // Check if user is near bottom
-  function checkIfAtBottom() {
-    if (!scrollContainer) return true;
-    const threshold = 150;
-    const scrollBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
-    return scrollBottom < threshold;
   }
 
   // TanStack Virtual - FIXED: Proper spacing calculation! 🦍
@@ -97,61 +92,50 @@
         });
   });
 
-  // 🦍 MAIN SCROLL LOGIC - Keep chat at BOTTOM!
+  // 🦍 SCROLL LOGIC - Keep chat at bottom!
   $effect(() => {
     const currentCount = displayMessages.length;
-    const isLoading = loading;
 
-    // First load - scroll to bottom!
+    // FIRST LOAD - Scroll to bottom!
     if (currentCount > 0 && prevMessageCount === 0) {
       prevMessageCount = currentCount;
-      // Multiple attempts to ensure scroll works
-      scrollToBottom();
-      setTimeout(() => scrollToBottom(), 50);
-      setTimeout(() => scrollToBottom(), 150);
+      isLoadingOlder = false;
+      
+      forceScrollToBottom();
+      setTimeout(() => forceScrollToBottom(), 100);
       return;
     }
 
-    // New message arrived!
+    // NEW MESSAGE ARRIVED!
     if (currentCount > prevMessageCount) {
-      const wasLoadingOlderMessages = wasLoading && !isLoading;
-      prevMessageCount = currentCount;
-      
-      // If we just finished loading older messages, don't scroll
-      if (wasLoadingOlderMessages) {
-        wasLoading = false;
+      // If loading older messages, just mark it
+      if (loading) {
+        isLoadingOlder = true;
+      } else if (isLoadingOlder) {
+        // Just finished loading older messages - DON'T scroll
+        isLoadingOlder = false;
+        prevMessageCount = currentCount;
         return;
-      }
-      
-      // NEW MESSAGE (user or AI) - ALWAYS scroll to bottom! 🍌
-      // Check if user was already at bottom
-      const shouldScroll = isUserAtBottom || !wasLoading;
-      
-      if (shouldScroll) {
-        // Multiple attempts with increasing delays to ensure virtualizer updates
-        requestAnimationFrame(() => scrollToBottom());
-        setTimeout(() => scrollToBottom(), 50);
-        setTimeout(() => scrollToBottom(), 150);
-        setTimeout(() => scrollToBottom(), 300);
+      } else {
+        // NEW MESSAGE from user or AI - Scroll to bottom! 🍌
+        prevMessageCount = currentCount;
+        
+        // Two attempts: immediate + delayed for virtualizer
+        forceScrollToBottom();
+        setTimeout(() => forceScrollToBottom(), 100);
       }
     }
-
-    // Track loading state
-    wasLoading = isLoading;
   });
 
   // 🦍 When AI starts generating, scroll to bottom!
   $effect(() => {
     if (chatStore.aiGenerating && scrollContainer) {
-      scrollToBottom(true);
+      forceScrollToBottom();
     }
   });
 
   // Handle scroll for infinite loading
   function handleScroll() {
-    // Update if user is at bottom
-    isUserAtBottom = checkIfAtBottom();
-    
     // Load older messages if scrolled to top
     if (
       scrollContainer &&
@@ -159,6 +143,7 @@
       hasMore &&
       !loading
     ) {
+      isLoadingOlder = true;
       onLoadMore();
     }
   }
