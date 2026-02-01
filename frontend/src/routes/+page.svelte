@@ -23,7 +23,11 @@
 			console.log('[DEBUG] Rooms fetched:', rooms);
 			chatStore.setRooms(rooms);
 			if (rooms.length > 0) {
+				console.log('[DEBUG] Setting active room to:', rooms[0].id);
 				chatStore.setActiveRoom(rooms[0].id);
+				console.log('[DEBUG] Active room set! activeRoomId now:', chatStore.activeRoomId);
+			} else {
+				console.log('[DEBUG] No rooms found!');
 			}
 		} catch (e) {
 			console.error('[DEBUG] loadRooms failed:', e);
@@ -64,8 +68,22 @@
 		console.log('[DEBUG] Message data:', wsMessage.message);
 		if (wsMessage.type === 'new_message') {
 			console.log('[DEBUG] Adding message to store for room:', wsMessage.message.room_id);
+			console.log('[DEBUG] Message author:', wsMessage.message.author);
 			chatStore.addMessage(wsMessage.message.room_id, wsMessage.message);
 			console.log('[DEBUG] Message added to store successfully');
+			console.log('[DEBUG] Current messages count:', chatStore.activeMessages.length);
+			
+			// Stop loading only if this is an AI model response (not a caveman user)
+			const cavemanNames = ['Grok', 'Ooga', 'Booga', 'Ugga', 'Mugga'];
+			const isUserMessage = cavemanNames.includes(wsMessage.message.author);
+			const isAiResponse = !isUserMessage; // AI responses have model names like "gemma3:4b"
+			
+			console.log('[DEBUG] isUserMessage:', isUserMessage, 'isAiResponse:', isAiResponse, 'aiGenerating:', chatStore.aiGenerating);
+			
+			if (isAiResponse && chatStore.aiGenerating) {
+				console.log('[DEBUG] AI response received! Stopping loading animation');
+				chatStore.setAiGenerating(false);
+			}
 		}
 	}
 
@@ -127,9 +145,19 @@
 	// Handle message submit
 	async function handleSubmit(content: string, author: string) {
 		if (!chatStore.activeRoomId) return;
+		console.log('[DEBUG] handleSubmit - content:', content, 'author:', author);
 		// If in AI room, include selected model
 		const model = isAiRoom ? (chatStore.selectedModel || undefined) : undefined;
+		console.log('[DEBUG] isAiRoom:', isAiRoom, 'model:', model);
+		
+		// Set AI generating state if model is selected
+		if (isAiRoom && model) {
+			console.log('[DEBUG] Setting AI generating to true');
+			chatStore.setAiGenerating(true);
+		}
+		
 		await createMessage(chatStore.activeRoomId, content, author, model);
+		console.log('[DEBUG] Message created');
 		// Message will arrive via WebSocket, no need to manually add
 	}
 
@@ -212,8 +240,9 @@
 				<p class="text-muted-foreground">No cave! Monkey need cave! Make new cave! 🏔️</p>
 			</div>
 		{:else}
+			{@const msgs = chatStore.activeMessages}
 			<MessageList
-				messages={chatStore.activeMessages}
+				messages={msgs}
 				loading={chatStore.loadingMessages}
 				hasMore={chatStore.hasMoreMessages}
 				onLoadMore={loadMoreMessages}

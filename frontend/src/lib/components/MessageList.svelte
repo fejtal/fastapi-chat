@@ -1,6 +1,8 @@
 <script lang="ts">
   import { createVirtualizer } from "@tanstack/svelte-virtual";
   import MessageItem from "./MessageItem.svelte";
+  import MessageLoading from "./MessageLoading.svelte";
+  import { chatStore } from "$lib/stores/chat.svelte";
   import type { Message } from "$lib/types/chat";
 
   let {
@@ -21,10 +23,27 @@
   // Reversed messages for display (oldest at top, newest at bottom)
   const displayMessages = $derived([...messages].reverse());
 
+  // Debug logging for message changes
+  $effect(() => {
+    console.log('[MessageList] ===== STATE UPDATE =====');
+    console.log('[MessageList] Messages count:', messages.length);
+    console.log('[MessageList] Display messages count:', displayMessages.length);
+    console.log('[MessageList] AI generating:', chatStore.aiGenerating);
+    console.log('[MessageList] Virtualizer exists:', virtualizer !== null);
+    console.log('[MessageList] ScrollContainer exists:', scrollContainer !== undefined);
+    if (displayMessages.length > 0) {
+      console.log('[MessageList] First message:', displayMessages[0]);
+      console.log('[MessageList] Last message:', displayMessages[displayMessages.length - 1]);
+    }
+  });
+
   // TanStack Virtual - FIXED: Proper spacing calculation! 🦍
-  const virtualizer = $derived(
-    scrollContainer
-      ? createVirtualizer<HTMLDivElement, HTMLDivElement>({
+  const virtualizer = $derived.by(() => {
+    if (!scrollContainer) return null;
+    
+    console.log('[MessageList] Creating virtualizer with count:', displayMessages.length);
+    
+    return createVirtualizer<HTMLDivElement, HTMLDivElement>({
           count: displayMessages.length,
           getScrollElement: () => scrollContainer ?? null,
           estimateSize: (index) => {
@@ -40,10 +59,11 @@
             let totalLines = 0;
             
             // Account for actual container width after padding
-            // Container is ~1040px, minus px-4 (32px), minus pl-[52px] = ~956px for text
-            const containerWidth = 956;
+            // Message is max 50% width of container
+            // Container ~1040px, 50% = 520px, minus padding (p-4 + pl-52) = ~452px for text
+            const containerWidth = 450; // Conservative estimate for 50% messenger-style
             const avgCharWidth = 8.5; // Average character width in pixels
-            const charsPerLine = Math.floor(containerWidth / avgCharWidth); // ~112 chars
+            const charsPerLine = Math.floor(containerWidth / avgCharWidth); // ~53 chars
             
             for (const line of lines) {
               if (line.length === 0) {
@@ -58,22 +78,22 @@
             
             totalLines = Math.max(1, totalLines);
             
-            // Exact pixel breakdown:
-            const avatarArea = 54;        // Measured
-            const lineHeight = 26;        // leading-relaxed computed
+            // Precise pixel breakdown with consistent safety margin:
+            const avatarArea = 54;        // h-10 + gap + mb-3
+            const lineHeight = 26;        // leading-relaxed
             const contentArea = totalLines * lineHeight;
-            const cardPadding = 32;       // p-4 
+            const cardPadding = 32;       // p-4 (16+16)
             const messageGap = 16;        // mb-4
-            const borderWidth = 2;        // border
+            const borderWidth = 2;        // border (1+1)
+            const consistentMargin = 8;   // Consistent safety for all messages
             
-            return avatarArea + contentArea + cardPadding + messageGap + borderWidth;
+            return avatarArea + contentArea + cardPadding + messageGap + borderWidth + consistentMargin;
           },
           overscan: 5,
-        })
-      : null,
-  );
+        });
+  });
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll to bottom when new messages arrive or AI starts generating
   $effect(() => {
     if (displayMessages.length > prevMessageCount && virtualizer) {
       prevMessageCount = displayMessages.length;
@@ -87,6 +107,21 @@
           })();
         }
       }, 100);
+    }
+  });
+
+  // Scroll to bottom when AI starts generating
+  $effect(() => {
+    if (chatStore.aiGenerating && scrollContainer) {
+      // Use requestAnimationFrame to ensure DOM is updated
+      requestAnimationFrame(() => {
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: scrollContainer.scrollHeight,
+            behavior: "smooth",
+          });
+        }
+      });
     }
   });
 
@@ -127,22 +162,30 @@
       onscroll={handleScroll}
       class="h-full overflow-y-auto px-4 py-4"
     >
-      {#if virtualizer}
-        <!-- TanStack Virtual Container - OFFICIAL PATTERN! -->
-        <div
-          style="position: relative; height: {$virtualizer!.getTotalSize()}px; width: 100%;"
-        >
-          {#each $virtualizer!.getVirtualItems() as row (row.index)}
-            <div
-              class="virtual-item-wrapper"
-              style="position: absolute; top: 0; left: 0; width: 100%; transform: translateY({row.start}px);"
-              data-index={row.index}
-            >
-              <MessageItem message={displayMessages[row.index]} />
-            </div>
-          {/each}
-        </div>
-      {/if}
+      <div>
+        {#if virtualizer}
+          <!-- TanStack Virtual Container - OFFICIAL PATTERN! -->
+          <div
+            style="position: relative; height: {$virtualizer!.getTotalSize()}px; width: 100%;"
+          >
+            {#each $virtualizer!.getVirtualItems() as row (row.index)}
+              <div
+                class="virtual-item-wrapper"
+                style="position: absolute; top: 0; left: 0; width: 100%; transform: translateY({row.start}px);"
+                data-index={row.index}
+              >
+                <MessageItem message={displayMessages[row.index]} />
+              </div>
+            {/each}
+          </div>
+        {/if}
+        <!-- AI Loading Indicator - appears below virtual items -->
+        {#if chatStore.aiGenerating}
+          <MessageLoading />
+        {:else}
+          <div style="display: none;">[aiGenerating: {chatStore.aiGenerating}]</div>
+        {/if}
+      </div>
     </div>
     {#if loading}
       <div
