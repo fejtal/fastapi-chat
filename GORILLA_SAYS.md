@@ -167,7 +167,7 @@ gemma3:4b says: "OOK! Do this. 🍌"
 ```
 User pick 🤖 Ollama
    ↓
-User pick qwen2.5:3b brain
+User pick gemma3:4b brain
    ↓
 User type "OOK OOK!"
    ↓
@@ -185,7 +185,7 @@ Ollama think... 🧠
    ↓
 Ollama grunt back smart answer!
    ↓
-Backend save AI response (author = "qwen2.5:3b")
+Backend save AI response (author = "gemma3:4b")
    ↓
 WebSocket broadcast to all monkeys!
    ↓
@@ -196,7 +196,7 @@ Everyone see AI monkey grunt! 🎉
 
 - First message SLOW (3-5 seconds) - AI waking up!
 - Next messages FAST (< 1 second) - AI already awake!
-- qwen2.5:3b perfect for chat - fast and smart!
+- gemma3:4b perfect for chat - fast and smart!
 - Bigger brains (7B, 14B) need strong computer!
 
 ## Troubleshooting (If Banana Not Work) 🍌❌
@@ -316,7 +316,7 @@ estimateSize: (index) => {
 └────────────────────────────┘
      ↓ Gap (16px) ↓
 ┌────────────────────────────┐
-│ 🤖 qwen2.5:3b  10:31 AM    │
+│ 🤖 gemma3:4b  10:31 AM    │
 │                            │
 │     AI response here...    │
 └────────────────────────────┘

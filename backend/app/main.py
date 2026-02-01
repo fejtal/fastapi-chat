@@ -9,7 +9,7 @@ from app.core.config import settings
 from app.db.session import async_session, engine
 from app.models import Base, Room
 
-AI_ROOM_NAME = "🤖 AI Cave (Talk to Qwen)"
+AI_ROOM_NAME = "🤖 AI Cave (Talk to Gemma)"
 DEFAULT_ROOM_NAME = "Cave 🍌"
 
 

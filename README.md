@@ -6,6 +6,10 @@
 
 This cave for learning and banana experiments! No production! No internet! Run on monkey computer only! 🍌🦍
 
+🔥 **NO TESTS! NO LINT! JUST RUN! HOPE COMPUTER NO BLOW UP!** 🔥
+
+Gorilla write code. Gorilla no test. Gorilla believe in chaos! If work, good! If break, fix later! True monkey way! 🦍💥
+
 ---
 
 # 🍌 Cave Chat - OOK OOK!
@@ -139,7 +143,7 @@ Docker automatically connects to Ollama on your host machine using `host.docker.
 ## How AI Rooms Work 🤖
 
 ### Default Rooms Created:
-1. **🤖 AI Cave (Talk to Qwen)** - Chat with ALPHA GORILLA AI!
+1. **🤖 AI Cave (Talk to Gemma)** - Chat with ALPHA GORILLA AI!
 2. **Cave 🍌** - Regular monkey chat
 
 ### Making AI Rooms:
