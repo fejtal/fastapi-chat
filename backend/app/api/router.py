@@ -1,6 +1,5 @@
-from fastapi import APIRouter
-
 from app.api.routes import messages, ollama, rooms, ws
+from fastapi import APIRouter
 
 api_router = APIRouter()
 api_router.include_router(rooms.router, prefix="/rooms", tags=["rooms"])

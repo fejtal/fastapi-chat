@@ -1,33 +1,72 @@
 @import 'tailwindcss';
 
 @theme inline {
-	--color-background: oklch(1 0 0);
-	--color-foreground: oklch(0.145 0.017 285.823);
-	--color-card: oklch(1 0 0);
-	--color-card-foreground: oklch(0.145 0.017 285.823);
-	--color-popover: oklch(1 0 0);
-	--color-popover-foreground: oklch(0.145 0.017 285.823);
-	--color-primary: oklch(0.205 0.028 285.823);
-	--color-primary-foreground: oklch(0.985 0.002 247.839);
-	--color-secondary: oklch(0.97 0.006 264.531);
-	--color-secondary-foreground: oklch(0.205 0.028 285.823);
-	--color-muted: oklch(0.97 0.006 264.531);
-	--color-muted-foreground: oklch(0.556 0.022 257.417);
-	--color-accent: oklch(0.97 0.006 264.531);
-	--color-accent-foreground: oklch(0.205 0.028 285.823);
-	--color-destructive: oklch(0.577 0.245 27.325);
-	--color-border: oklch(0.929 0.013 255.508);
-	--color-input: oklch(0.929 0.013 255.508);
-	--color-ring: oklch(0.708 0.165 254.624);
+	/* 🌴 JUNGLE THEME - MADE BY GORILLA! 🦍 */
+	
+	/* Deep forest floor - rich dark green-brown */
+	--color-background: oklch(0.25 0.06 140);
+	
+	/* Light cream text - like moonlight on leaves */
+	--color-foreground: oklch(0.95 0.015 85);
+	
+	/* Moss-covered stone cards - medium green */
+	--color-card: oklch(0.35 0.08 145);
+	--color-card-foreground: oklch(0.95 0.015 85);
+	
+	/* Popover like tree bark */
+	--color-popover: oklch(0.32 0.07 140);
+	--color-popover-foreground: oklch(0.95 0.015 85);
+	
+	/* Rich jungle green - banana leaf! 🍌 */
+	--color-primary: oklch(0.55 0.15 145);
+	--color-primary-foreground: oklch(0.15 0.02 140);
+	
+	/* Earthy brown secondary - tree bark */
+	--color-secondary: oklch(0.40 0.06 60);
+	--color-secondary-foreground: oklch(0.95 0.015 85);
+	
+	/* Muted forest understory */
+	--color-muted: oklch(0.30 0.05 145);
+	--color-muted-foreground: oklch(0.70 0.04 85);
+	
+	/* Golden sunlight through canopy! ☀️ */
+	--color-accent: oklch(0.65 0.12 85);
+	--color-accent-foreground: oklch(0.20 0.02 60);
+	
+	/* Destructive - red tropical flower */
+	--color-destructive: oklch(0.55 0.22 25);
+	
+	/* Borders - dark vine brown */
+	--color-border: oklch(0.28 0.04 135);
+	--color-input: oklch(0.32 0.06 140);
+	
+	/* Ring focus - bright jungle green glow */
+	--color-ring: oklch(0.60 0.18 150);
+	
 	--radius: 0.625rem;
 }
 
 html,
 body {
 	height: 100%;
+	/* 🦍 Mobile optimization - prevent unwanted zoom and horizontal scroll */
+	-webkit-text-size-adjust: 100%;
+	overflow-x: hidden;
 }
 
 body {
-	background-color: var(--color-background);
+	/* 🌴 GORILLA JUNGLE GRADIENT! 🦍 More color! More tropical! */
+	background: linear-gradient(
+		135deg,
+		oklch(0.28 0.08 160) 0%,      /* Deep emerald jungle */
+		oklch(0.25 0.10 145) 15%,     /* Rich forest green */
+		oklch(0.22 0.08 135) 30%,     /* Dark moss */
+		oklch(0.26 0.06 70) 45%,      /* Earthy brown shadow */
+		oklch(0.24 0.09 150) 60%,     /* Deep leaf green */
+		oklch(0.27 0.07 100) 75%,     /* Jungle yellow-green */
+		oklch(0.23 0.10 140) 90%,     /* Dark tropical green */
+		oklch(0.25 0.08 155) 100%     /* Deep teal jungle */
+	);
+	background-attachment: fixed;
 	color: var(--color-foreground);
 }

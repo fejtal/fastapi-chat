@@ -39,12 +39,12 @@
 	});
 </script>
 
-<div class="flex items-center gap-2 px-4 py-2 bg-card border-b">
+<div class="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-2 bg-card border-b">
 	{#if mounted && browser && chatStore.rooms.length > 0}
-		<Tabs bind:value={tabValue} class="flex-1">
-			<TabsList class="h-9">
+		<Tabs bind:value={tabValue} class="flex-1 overflow-x-auto">
+			<TabsList class="h-8 md:h-9">
 				{#each chatStore.rooms as room (room.id)}
-					<TabsTrigger value={room.id.toString()} class="text-sm">
+					<TabsTrigger value={room.id.toString()} class="text-xs md:text-sm px-2 md:px-3">
 						{room.name}
 					</TabsTrigger>
 				{/each}
@@ -55,7 +55,7 @@
 			{#each chatStore.rooms as room (room.id)}
 				<button
 					onclick={() => chatStore.setActiveRoom(room.id)}
-					class="px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap
+					class="px-3 md:px-4 py-1.5 md:py-2 rounded-md text-xs md:text-sm font-medium transition-colors whitespace-nowrap
 						{chatStore.activeRoomId === room.id
 							? 'bg-primary text-primary-foreground'
 							: 'bg-muted text-muted-foreground hover:bg-muted/80'}"
@@ -67,7 +67,7 @@
 	{:else}
 		<div class="flex-1"></div>
 	{/if}
-	<Button variant="outline" size="sm" onclick={onCreateRoom}>
-		+ New Cave
+	<Button variant="outline" size="sm" onclick={onCreateRoom} class="text-xs md:text-sm whitespace-nowrap">
+		+ <span class="hidden sm:inline">New </span>Cave
 	</Button>
 </div>

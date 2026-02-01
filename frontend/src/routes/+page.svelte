@@ -161,17 +161,17 @@
 
 <main class="h-screen flex flex-col bg-muted/40">
 	<!-- Header -->
-	<header class="bg-card border-b px-6 py-4">
-		<div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
-			<h1 class="text-2xl font-bold">🍌 Cave Chat</h1>
-			<div class="flex items-center gap-3">
+	<header class="bg-card border-b px-4 md:px-6 py-4">
+		<div class="w-full md:max-w-4xl md:mx-auto flex items-center justify-between gap-2 md:gap-4">
+			<h1 class="text-xl md:text-2xl font-bold">🍌 Cave Chat</h1>
+			<div class="flex items-center gap-2 md:gap-3">
 				{#if chatStore.activeRoomId}
 					<button
 						onclick={handleClearChat}
-						class="px-3 py-1.5 text-sm bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-lg border border-red-500/20 transition-colors"
+						class="px-2 md:px-3 py-1.5 text-xs md:text-sm bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-lg border border-red-500/20 transition-colors"
 						title="Clear all messages in this cave"
 					>
-						🗑️ Clear Cave
+						🗑️ <span class="hidden sm:inline">Clear Cave</span>
 					</button>
 				{/if}
 				<UserPicker />
@@ -180,7 +180,7 @@
 	</header>
 
 	<!-- Room Tabs -->
-	<div class="max-w-4xl mx-auto w-full">
+	<div class="w-full md:max-w-4xl md:mx-auto">
 		<RoomTabs onCreateRoom={handleCreateRoom} />
 		{#if isAiRoom}
 			<div class="px-4 py-3 bg-card border-b">
@@ -190,14 +190,14 @@
 	</div>
 
 	<!-- Chat Area -->
-	<div class="flex-1 max-w-4xl mx-auto w-full flex flex-col overflow-hidden">
+	<div class="flex-1 w-full md:max-w-4xl md:mx-auto flex flex-col overflow-hidden">
 		{#if chatStore.loadingRooms}
-			<div class="flex-1 flex items-center justify-center">
-				<p class="text-muted-foreground">OOK! Searching for caves... 🍌🦍</p>
+			<div class="flex-1 flex items-center justify-center px-4">
+				<p class="text-muted-foreground text-sm md:text-base text-center">OOK! Searching for caves... 🍌🦍</p>
 			</div>
 		{:else if !chatStore.activeRoom}
-			<div class="flex-1 flex items-center justify-center">
-				<p class="text-muted-foreground">No cave! Monkey need cave! Make new cave! 🏔️</p>
+			<div class="flex-1 flex items-center justify-center px-4">
+				<p class="text-muted-foreground text-sm md:text-base text-center">No cave! Monkey need cave! Make new cave! 🏔️</p>
 			</div>
 		{:else}
 			{@const msgs = chatStore.activeMessages}
@@ -208,7 +208,7 @@
 				onLoadMore={loadMoreMessages}
 			/>
 			{#if isAiRoom && !chatStore.selectedModel}
-				<div class="px-4 py-2 bg-yellow-500/10 border-t border-yellow-500/20 text-yellow-700 dark:text-yellow-400 text-sm text-center">
+				<div class="px-3 md:px-4 py-2 bg-yellow-500/10 border-t border-yellow-500/20 text-yellow-700 dark:text-yellow-400 text-xs md:text-sm text-center">
 					⚠️ Pick monkey brain first! AI need brain to talk! 🧠
 				</div>
 			{/if}

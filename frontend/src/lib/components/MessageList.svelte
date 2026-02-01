@@ -19,9 +19,29 @@
 
   let scrollContainer = $state<HTMLDivElement>();
   let prevMessageCount = $state(0);
+  let isUserAtBottom = $state(true);
+  let wasLoading = $state(false);
 
   // Reversed messages for display (oldest at top, newest at bottom)
   const displayMessages = $derived([...messages].reverse());
+
+  // Helper to scroll to bottom smoothly
+  function scrollToBottom(smooth = false) {
+    if (!scrollContainer) return;
+    const behavior = smooth ? 'smooth' : 'auto';
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight,
+      behavior
+    });
+  }
+
+  // Check if user is near bottom
+  function checkIfAtBottom() {
+    if (!scrollContainer) return true;
+    const threshold = 150;
+    const scrollBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
+    return scrollBottom < threshold;
+  }
 
   // TanStack Virtual - FIXED: Proper spacing calculation! 🦍
   const virtualizer = $derived.by(() => {
@@ -77,40 +97,62 @@
         });
   });
 
-  // Auto-scroll to bottom when new messages arrive or AI starts generating
+  // 🦍 MAIN SCROLL LOGIC - Keep chat at BOTTOM!
   $effect(() => {
-    if (displayMessages.length > prevMessageCount && virtualizer) {
-      prevMessageCount = displayMessages.length;
-      // Scroll to bottom
-      setTimeout(() => {
-        if (virtualizer) {
-          virtualizer.subscribe((v) => {
-            v.scrollToIndex(displayMessages.length - 1, {
-              align: "end",
-            });
-          })();
-        }
-      }, 100);
+    const currentCount = displayMessages.length;
+    const isLoading = loading;
+
+    // First load - scroll to bottom!
+    if (currentCount > 0 && prevMessageCount === 0) {
+      prevMessageCount = currentCount;
+      // Multiple attempts to ensure scroll works
+      scrollToBottom();
+      setTimeout(() => scrollToBottom(), 50);
+      setTimeout(() => scrollToBottom(), 150);
+      return;
     }
+
+    // New message arrived!
+    if (currentCount > prevMessageCount) {
+      const wasLoadingOlderMessages = wasLoading && !isLoading;
+      prevMessageCount = currentCount;
+      
+      // If we just finished loading older messages, don't scroll
+      if (wasLoadingOlderMessages) {
+        wasLoading = false;
+        return;
+      }
+      
+      // NEW MESSAGE (user or AI) - ALWAYS scroll to bottom! 🍌
+      // Check if user was already at bottom
+      const shouldScroll = isUserAtBottom || !wasLoading;
+      
+      if (shouldScroll) {
+        // Multiple attempts with increasing delays to ensure virtualizer updates
+        requestAnimationFrame(() => scrollToBottom());
+        setTimeout(() => scrollToBottom(), 50);
+        setTimeout(() => scrollToBottom(), 150);
+        setTimeout(() => scrollToBottom(), 300);
+      }
+    }
+
+    // Track loading state
+    wasLoading = isLoading;
   });
 
-  // Scroll to bottom when AI starts generating
+  // 🦍 When AI starts generating, scroll to bottom!
   $effect(() => {
     if (chatStore.aiGenerating && scrollContainer) {
-      // Use requestAnimationFrame to ensure DOM is updated
-      requestAnimationFrame(() => {
-        if (scrollContainer) {
-          scrollContainer.scrollTo({
-            top: scrollContainer.scrollHeight,
-            behavior: "smooth",
-          });
-        }
-      });
+      scrollToBottom(true);
     }
   });
 
   // Handle scroll for infinite loading
   function handleScroll() {
+    // Update if user is at bottom
+    isUserAtBottom = checkIfAtBottom();
+    
+    // Load older messages if scrolled to top
     if (
       scrollContainer &&
       scrollContainer.scrollTop < 100 &&
@@ -131,12 +173,12 @@
 
 <section class="flex-1 overflow-hidden bg-muted/30 rounded-lg relative">
   {#if loading && messages.length === 0}
-    <div class="flex items-center justify-center h-full">
-      <p class="text-muted-foreground">Loading messages...</p>
+    <div class="flex items-center justify-center h-full px-4">
+      <p class="text-muted-foreground text-sm md:text-base text-center">Loading messages...</p>
     </div>
   {:else if messages.length === 0}
-    <div class="flex items-center justify-center h-full">
-      <p class="text-muted-foreground">
+    <div class="flex items-center justify-center h-full px-4">
+      <p class="text-muted-foreground text-sm md:text-base text-center">
         No messages yet. Be the first caveman to grunt! 🍌
       </p>
     </div>
@@ -144,7 +186,7 @@
     <div
       bind:this={scrollContainer}
       onscroll={handleScroll}
-      class="h-full overflow-y-auto px-4 py-4"
+      class="h-full overflow-y-auto px-2 md:px-4 py-4"
     >
       <div>
         {#if virtualizer}
@@ -173,7 +215,7 @@
     </div>
     {#if loading}
       <div
-        class="absolute top-2 left-1/2 -translate-x-1/2 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium border"
+        class="absolute top-2 left-1/2 -translate-x-1/2 bg-primary/10 text-primary px-2 md:px-3 py-1 md:py-1.5 rounded-full text-xs md:text-sm font-medium border whitespace-nowrap"
       >
         Loading older messages...
       </div>

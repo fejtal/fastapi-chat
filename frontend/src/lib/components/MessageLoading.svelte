@@ -29,8 +29,8 @@
 </script>
 
 <!-- Simple single-line loader -->
-<div class="flex w-full mb-4 justify-start">
-	<div class="text-muted-foreground italic text-sm animate-pulse">
+<div class="flex w-full mb-4 justify-start px-2 md:px-0">
+	<div class="text-muted-foreground italic text-xs md:text-sm animate-pulse">
 		{currentText}
 	</div>
 </div>

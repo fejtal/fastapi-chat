@@ -23,8 +23,8 @@
 	}
 </script>
 
-<form onsubmit={handleSubmit} class="flex gap-3 items-center p-4 bg-card border-t">
-	<div class="h-10 w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-xl">
+<form onsubmit={handleSubmit} class="flex gap-2 md:gap-3 items-center p-3 md:p-4 bg-card border-t">
+	<div class="h-8 w-8 md:h-10 md:w-10 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-lg md:text-xl">
 		{chatStore.selectedUser.avatar}
 	</div>
 	<Input
@@ -32,9 +32,10 @@
 		placeholder="OOK OOK! Type your grunt here... 🦍"
 		bind:value={content}
 		required
-		class="flex-1"
+		class="flex-1 text-sm md:text-base"
 	/>
-	<Button type="submit" disabled={submitting}>
-		{submitting ? 'Throwing banana... 🍌' : 'GRUNT! 🦍'}
+	<Button type="submit" disabled={submitting} class="text-xs md:text-sm whitespace-nowrap">
+		{submitting ? '🍌' : '🦍'}
+		<span class="hidden sm:inline ml-1">{submitting ? 'Throwing...' : 'GRUNT!'}</span>
 	</Button>
 </form>

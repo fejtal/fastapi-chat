@@ -34,12 +34,12 @@
 	});
 </script>
 
-<div class="flex items-center gap-3">
-		<span class="text-sm text-muted-foreground">Model:</span>
+<div class="flex items-center gap-2 md:gap-3 flex-wrap">
+		<span class="text-xs md:text-sm text-muted-foreground">Model:</span>
 		{#if loading}
-			<span class="text-sm text-muted-foreground">Finding monkey brains... 🧠</span>
+			<span class="text-xs md:text-sm text-muted-foreground">Finding monkey brains... 🧠</span>
 		{:else if error}
-			<span class="text-sm text-destructive">{error}</span>
+			<span class="text-xs md:text-sm text-destructive">{error}</span>
 		{:else if models.length > 0}
 			{@const currentModel = chatStore.selectedModel}
 			<select
@@ -48,7 +48,7 @@
 					const target = e.currentTarget;
 					chatStore.setSelectedModel(target.value || null);
 				}}
-				class="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+				class="h-8 md:h-9 rounded-md border border-input bg-background px-2 md:px-3 py-1 text-xs md:text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 			>
 				<option value="">Pick monkey brain... 🧠</option>
 				{#each models as model}
@@ -56,9 +56,9 @@
 				{/each}
 			</select>
 			{#if chatStore.selectedModel}
-				<Badge variant="secondary">{chatStore.selectedModel}</Badge>
+				<Badge variant="secondary" class="text-xs hidden sm:inline-flex">{chatStore.selectedModel}</Badge>
 			{/if}
 		{:else}
-			<span class="text-sm text-muted-foreground">No monkey brains in cave! 🏜️</span>
+			<span class="text-xs md:text-sm text-muted-foreground">No monkey brains in cave! 🏜️</span>
 		{/if}
 </div>

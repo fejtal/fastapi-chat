@@ -1,14 +1,15 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import func, select
-from sqlalchemy.ext.asyncio import AsyncSession
-
+import httpx
 from app.api.deps import get_db
 from app.core.websocket import manager
 from app.models import Message, Room
 from app.schemas import MessageCreate, MessageResponse, PaginatedMessages
 from app.services.ollama import ollama_service
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql.functions import count
 
 logger = logging.getLogger(__name__)
 
@@ -28,9 +29,8 @@ async def get_messages(
         raise HTTPException(status_code=404, detail="Room not found")
 
     # Count total messages
-    count_result = await db.execute(
-        select(func.count(Message.id)).where(Message.room_id == room_id)
-    )
+    count_query = select(count()).select_from(Message).where(Message.room_id == room_id)
+    count_result = await db.execute(count_query)
     total = count_result.scalar()
 
     # Get paginated messages (newest first, but we return in chronological order for display)
@@ -182,7 +182,7 @@ async def create_message(message: MessageCreate, db: AsyncSession = Depends(get_
                 )
                 await manager.broadcast_to_room(message.room_id, ai_ws_message)
                 logger.info(f"AI response broadcasted successfully")
-        except Exception as e:
+        except (httpx.HTTPError, httpx.ConnectError, httpx.TimeoutException, ValueError, KeyError, AttributeError) as e:
             logger.error(f"Failed to generate Ollama response: {e}", exc_info=True)
             # Don't fail the request if Ollama fails
         else:
@@ -204,9 +204,8 @@ async def clear_room_messages(
         raise HTTPException(status_code=404, detail="Room not found")
     
     # Get count of messages before deleting
-    count_result = await db.execute(
-        select(func.count(Message.id)).where(Message.room_id == room_id)
-    )
+    count_query = select(count()).select_from(Message).where(Message.room_id == room_id)
+    count_result = await db.execute(count_query)
     message_count = count_result.scalar()
     
     # Delete all messages in the room
