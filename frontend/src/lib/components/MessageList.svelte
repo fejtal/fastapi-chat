@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createVirtualizer } from "@tanstack/svelte-virtual";
-  import { get } from "svelte/store";
   import MessageItem from "./MessageItem.svelte";
   import type { Message } from "$lib/types/chat";
 
@@ -22,63 +21,77 @@
   // Reversed messages for display (oldest at top, newest at bottom)
   const displayMessages = $derived([...messages].reverse());
 
-  // Create virtualizer with GENEROUS spacing to prevent overlap
-  const virtualizerStore = $derived(
+  // TanStack Virtual - FIXED: Proper spacing calculation! 🦍
+  const virtualizer = $derived(
     scrollContainer
-      ? createVirtualizer({
+      ? createVirtualizer<HTMLDivElement, HTMLDivElement>({
           count: displayMessages.length,
           getScrollElement: () => scrollContainer ?? null,
           estimateSize: (index) => {
-            // Generous estimate to prevent overlap
+            // Calculate based on ACTUAL lines including newlines!
             const message = displayMessages[index];
-            const contentLength = message?.content?.length || 0;
-            // Very conservative: 50 chars per line
-            const charsPerLine = 50;
-            const lines = Math.max(1, Math.ceil(contentLength / charsPerLine));
-            // Generous line height + padding
-            const textHeight = lines * 28;
-            const basePadding = 80; // Avatar, author, timestamp, padding
-            const extraGap = 32; // Big gap between messages
-            return textHeight + basePadding + extraGap;
+            if (!message) return 180;
+            
+            const content = message.content || '';
+            if (content.length === 0) return 120;
+            
+            // Count ACTUAL lines with accurate wrapping!
+            const lines = content.split('\n');
+            let totalLines = 0;
+            
+            // Account for actual container width after padding
+            // Container is ~1040px, minus px-4 (32px), minus pl-[52px] = ~956px for text
+            const containerWidth = 956;
+            const avgCharWidth = 8.5; // Average character width in pixels
+            const charsPerLine = Math.floor(containerWidth / avgCharWidth); // ~112 chars
+            
+            for (const line of lines) {
+              if (line.length === 0) {
+                totalLines += 1; // Empty line
+              } else {
+                // Count emojis - they take ~2x space
+                const emojiCount = (line.match(/[\p{Emoji}\p{Emoji_Presentation}]/gu) || []).length;
+                const effectiveLength = line.length + emojiCount; // Emojis count as 2 chars
+                totalLines += Math.max(1, Math.ceil(effectiveLength / charsPerLine));
+              }
+            }
+            
+            totalLines = Math.max(1, totalLines);
+            
+            // Exact pixel breakdown:
+            const avatarArea = 54;        // Measured
+            const lineHeight = 26;        // leading-relaxed computed
+            const contentArea = totalLines * lineHeight;
+            const cardPadding = 32;       // p-4 
+            const messageGap = 16;        // mb-4
+            const borderWidth = 2;        // border
+            
+            return avatarArea + contentArea + cardPadding + messageGap + borderWidth;
           },
-          overscan: 3,
+          overscan: 5,
         })
       : null,
   );
 
-  // Subscribe to store to get values
-  let virtualItems = $state<{ index: number; start: number; size: number }[]>(
-    [],
-  );
-  let totalSize = $state(0);
-
+  // Auto-scroll to bottom when new messages arrive
   $effect(() => {
-    if (virtualizerStore) {
-      const unsubscribe = virtualizerStore.subscribe((v) => {
-        virtualItems = v.getVirtualItems();
-        totalSize = v.getTotalSize();
-      });
-      return unsubscribe;
-    }
-  });
-
-  // Scroll to bottom when new messages arrive
-  $effect(() => {
-    if (displayMessages.length > prevMessageCount && virtualizerStore) {
+    if (displayMessages.length > prevMessageCount && virtualizer) {
       prevMessageCount = displayMessages.length;
-      // Small delay to ensure render is complete
+      // Scroll to bottom
       setTimeout(() => {
-        const v = get(virtualizerStore);
-        v.scrollToIndex(displayMessages.length - 1, {
-          align: "end",
-          behavior: "smooth",
-        });
-      }, 50);
+        if (virtualizer) {
+          virtualizer.subscribe((v) => {
+            v.scrollToIndex(displayMessages.length - 1, {
+              align: "end",
+            });
+          })();
+        }
+      }, 100);
     }
   });
 
+  // Handle scroll for infinite loading
   function handleScroll() {
-    // Load more when scrolled near top (for older messages)
     if (
       scrollContainer &&
       scrollContainer.scrollTop < 100 &&
@@ -90,14 +103,21 @@
   }
 </script>
 
-<section class="flex-1 overflow-hidden bg-gray-50 rounded-lg relative">
+<style>
+  /* Ensure proper box-sizing for accurate measurements */
+  .virtual-item-wrapper {
+    box-sizing: border-box;
+  }
+</style>
+
+<section class="flex-1 overflow-hidden bg-muted/30 rounded-lg relative">
   {#if loading && messages.length === 0}
     <div class="flex items-center justify-center h-full">
-      <p class="text-gray-500">Loading messages...</p>
+      <p class="text-muted-foreground">Loading messages...</p>
     </div>
   {:else if messages.length === 0}
     <div class="flex items-center justify-center h-full">
-      <p class="text-gray-500">
+      <p class="text-muted-foreground">
         No messages yet. Be the first caveman to grunt! 🍌
       </p>
     </div>
@@ -105,23 +125,28 @@
     <div
       bind:this={scrollContainer}
       onscroll={handleScroll}
-      class="h-full overflow-y-auto"
+      class="h-full overflow-y-auto px-4 py-4"
     >
-      <div style="height: {totalSize}px; width: 100%; position: relative;">
-        {#each virtualItems as row (row.index)}
-          <div
-            data-index={row.index}
-            style="position: absolute; top: 0; left: 0; width: 100%; transform: translateY({row.start}px);"
-            class="px-4 pb-8"
-          >
-            <MessageItem message={displayMessages[row.index]} />
-          </div>
-        {/each}
-      </div>
+      {#if virtualizer}
+        <!-- TanStack Virtual Container - OFFICIAL PATTERN! -->
+        <div
+          style="position: relative; height: {$virtualizer!.getTotalSize()}px; width: 100%;"
+        >
+          {#each $virtualizer!.getVirtualItems() as row (row.index)}
+            <div
+              class="virtual-item-wrapper"
+              style="position: absolute; top: 0; left: 0; width: 100%; transform: translateY({row.start}px);"
+              data-index={row.index}
+            >
+              <MessageItem message={displayMessages[row.index]} />
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
     {#if loading}
       <div
-        class="absolute top-2 left-1/2 -translate-x-1/2 bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm"
+        class="absolute top-2 left-1/2 -translate-x-1/2 bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-medium border"
       >
         Loading older messages...
       </div>

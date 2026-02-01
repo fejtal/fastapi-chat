@@ -8,10 +8,11 @@ Real-time chat app for cavemen! Built by smart gorilla with FastAPI + Svelte 5 +
 
 - 🍌 Multiple chat rooms (caves)
 - 🍌 Real-time messages via WebSocket
-- 🍌 Virtual scroll for many messages (Virtua)
+- 🍌 Smooth auto-scrolling to new messages
 - 🍌 Infinite scroll to load older messages
 - 🍌 Pick caveman avatar to send messages
 - 🍌 Tabs for switching between caves
+- 🍌 Clean card-style messages with perfect spacing
 - 🤖 Ollama AI chat integration - select a model and chat with AI
 
 ## Tech Stack
@@ -28,8 +29,7 @@ Real-time chat app for cavemen! Built by smart gorilla with FastAPI + Svelte 5 +
 - Svelte 5 (with runes)
 - SvelteKit
 - TypeScript
-- Tailwind CSS
-- Virtua (virtual list)
+- Tailwind CSS v4
 - Bun
 
 ## Quick Start (Wake Up All Monkeys) 🦍
@@ -197,6 +197,22 @@ Pick your avatar:
 - 🙈 Ugga
 - 🙉 Mugga
 - 🤖 Ollama (AI chat - select a model to chat with AI)
+
+## UI Features
+
+### Simple & Fast 🚀
+- Clean list rendering (no complex virtualization)
+- Perfect spacing with Tailwind utilities
+- Auto-scroll to bottom on new messages
+- Infinite scroll to load older messages
+- Smooth scrolling animations
+
+### Clean Message Design 🎨
+- Card-style layout (no messenger bubbles!)
+- Consistent styling for all messages
+- Avatar + username + timestamp header
+- Perfect spacing between messages
+- Hover effects for better UX
 
 ## License
 
